@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.reactnativegoogleplaygames" >
+
+    <uses-sdk android:minSdkVersion="24" />
+
+    <application>
+        <provider
+            android:name="com.reactnativegoogleplaygames.GooglePlayGamesInitProvider"
+            android:authorities="${applicationId}.reactnativegoogleplaygames-init-provider"
+            android:exported="false"
+            android:initOrder="100" />
+    </application>
+
+</manifest>

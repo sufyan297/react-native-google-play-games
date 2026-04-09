@@ -11,6 +11,8 @@ This v1 package focuses on Google Play Games single sign-on for React Native `0.
 - `signOut()`
 - `getPlayer()`
 
+Note: Google Play Games Services v2 on Android no longer exposes a native sign-out API. In this library, `signOut()` is kept in the JS surface for API stability, but currently rejects with `E_SIGN_OUT_UNSUPPORTED`.
+
 ## API
 
 ```ts

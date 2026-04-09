@@ -54,17 +54,10 @@ class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
   }
 
   override fun signOut(promise: Promise) {
-    withActivity(promise) { activity ->
-      PlayGames
-        .getGamesSignInClient(activity)
-        .signOut()
-        .addOnSuccessListener {
-          promise.resolve(null)
-        }
-        .addOnFailureListener { error ->
-          rejectPromise(promise, "E_SIGN_OUT_FAILED", error)
-        }
-    }
+    promise.reject(
+      "E_SIGN_OUT_UNSUPPORTED",
+      "Google Play Games Services v2 does not expose a sign-out API on Android.",
+    )
   }
 
   override fun getPlayer(promise: Promise) {

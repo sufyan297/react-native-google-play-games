@@ -1,0 +1,28 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:1:1-9:12
+INJECTED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:1:1-9:12
+	package
+		INJECTED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:1:11-69
+application
+ADDED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:2:3-8:17
+provider#com.reactnativegoogleplaygames.GooglePlayGamesInitProvider
+ADDED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:3:5-7:33
+	android:authorities
+		ADDED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:5:7-86
+	android:exported
+		ADDED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:6:7-31
+	android:initOrder
+		ADDED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:7:7-30
+	android:name
+		ADDED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml:4:7-50
+uses-sdk
+INJECTED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml
+INJECTED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/sufyan/Development/ReactNative/memory-match/node_modules/react-native-google-play-games/android/src/main/AndroidManifest.xml
