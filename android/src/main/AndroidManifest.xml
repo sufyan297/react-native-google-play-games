@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application>
+    <provider
+      android:name=".GooglePlayGamesInitProvider"
+      android:authorities="${applicationId}.reactnativegoogleplaygames-init-provider"
+      android:exported="false"
+      android:initOrder="100" />
+  </application>
+</manifest>
