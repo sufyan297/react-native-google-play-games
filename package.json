@@ -18,7 +18,9 @@
   "react-native": "./src/index.ts",
   "types": "./src/index.ts",
   "files": [
-    "android",
+    "android/src",
+    "android/build.gradle",
+    "android/consumer-rules.pro",
     "src",
     "react-native.config.js",
     "README.md",
@@ -36,6 +38,10 @@
     "url": "https://github.com/sufyan297/react-native-google-play-games.git"
   },
   "homepage": "https://github.com/sufyan297/react-native-google-play-games#readme",
+    "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "peerDependencies": {
     "react": "*",
     "react-native": ">=0.80.0"
