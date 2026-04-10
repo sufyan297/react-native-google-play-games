@@ -93,16 +93,12 @@ class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
       PlayGames
         .getAchievementsClient(activity)
         .unlock(achievementId)
-        .addOnSuccessListener {
-          promise.resolve(null)
-        }
-        .addOnFailureListener { error ->
-          rejectPromise(promise, "E_UNLOCK_ACHIEVEMENT_FAILED", error)
-        }
+
+      promise.resolve(null)
     }
   }
 
-  override fun incrementAchievement(achievementId: String, steps: Double, promise: Promise) {
+  override fun incrementAchievement(achievementId: String, steps: Double?, promise: Promise) {
     if (achievementId.isBlank()) {
       promise.reject(
         "E_INVALID_ACHIEVEMENT_ID",
@@ -111,7 +107,16 @@ class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
       return
     }
 
-    val stepCount = steps.toInt()
+    val requestedSteps = steps ?: 1.0
+    if (requestedSteps % 1.0 != 0.0) {
+      promise.reject(
+        "E_INVALID_ACHIEVEMENT_STEPS",
+        "steps must be a whole number greater than 0.",
+      )
+      return
+    }
+
+    val stepCount = requestedSteps.toInt()
     if (stepCount <= 0) {
       promise.reject(
         "E_INVALID_ACHIEVEMENT_STEPS",
