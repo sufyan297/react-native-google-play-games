@@ -2,14 +2,17 @@
 
 Android-only React Native TurboModule for Google Play Games Services.
 
-This v1 package focuses on Google Play Games single sign-on for React Native `0.80+` with the New Architecture only.
+This package focuses on Google Play Games single sign-on and achievements for React Native `0.80+` with the New Architecture only.
 
-## Included in v1
+## Included in v0.2.0
 
 - `isAuthenticated()`
 - `signIn()`
 - `signOut()`
 - `getPlayer()`
+- `unlockAchievement()`
+- `incrementAchievement()`
+- `showAchievements()`
 
 Note: Google Play Games Services v2 on Android no longer exposes a native sign-out API. In this library, `signOut()` is kept in the JS surface for API stability, but currently rejects with `E_SIGN_OUT_UNSUPPORTED`.
 
@@ -28,6 +31,9 @@ isAuthenticated(): Promise<boolean>;
 signIn(): Promise<GooglePlayGamesPlayer>;
 signOut(): Promise<void>;
 getPlayer(): Promise<GooglePlayGamesPlayer | null>;
+unlockAchievement(achievementId: string): Promise<void>;
+incrementAchievement(achievementId: string, steps?: number): Promise<void>;
+showAchievements(): Promise<void>;
 ```
 
 ## Installation
@@ -119,6 +125,31 @@ export async function ensurePlayGamesPlayer() {
   return player;
 }
 ```
+
+## Achievements usage
+
+```ts
+import GooglePlayGames from 'react-native-google-play-games';
+
+export async function unlockFirstWin() {
+  await GooglePlayGames.unlockAchievement('CgkIxxxxxxxxEAIQAQ');
+}
+
+export async function addProgress() {
+  await GooglePlayGames.incrementAchievement('CgkIxxxxxxxxEAIQAg', 1);
+}
+
+export async function openAchievementsScreen() {
+  await GooglePlayGames.showAchievements();
+}
+```
+
+## Achievements setup requirements
+
+- Define your achievements in Google Play Console before calling these APIs.
+- Use the Play Games achievement IDs from your Console configuration.
+- `incrementAchievement()` should only be used with incremental achievements.
+- `showAchievements()` opens the native Google Play Games achievements UI.
 
 ## Example: `PlayGamesContext.tsx`
 

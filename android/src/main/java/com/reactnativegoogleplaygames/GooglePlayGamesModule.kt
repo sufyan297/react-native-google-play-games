@@ -1,6 +1,7 @@
 package com.reactnativegoogleplaygames
 
 import android.app.Activity
+import android.content.Intent
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -79,6 +80,71 @@ class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
     }
   }
 
+  override fun unlockAchievement(achievementId: String, promise: Promise) {
+    if (achievementId.isBlank()) {
+      promise.reject(
+        "E_INVALID_ACHIEVEMENT_ID",
+        "achievementId must be a non-empty string.",
+      )
+      return
+    }
+
+    withActivity(promise) { activity ->
+      PlayGames
+        .getAchievementsClient(activity)
+        .unlock(achievementId)
+        .addOnSuccessListener {
+          promise.resolve(null)
+        }
+        .addOnFailureListener { error ->
+          rejectPromise(promise, "E_UNLOCK_ACHIEVEMENT_FAILED", error)
+        }
+    }
+  }
+
+  override fun incrementAchievement(achievementId: String, steps: Double, promise: Promise) {
+    if (achievementId.isBlank()) {
+      promise.reject(
+        "E_INVALID_ACHIEVEMENT_ID",
+        "achievementId must be a non-empty string.",
+      )
+      return
+    }
+
+    val stepCount = steps.toInt()
+    if (stepCount <= 0) {
+      promise.reject(
+        "E_INVALID_ACHIEVEMENT_STEPS",
+        "steps must be greater than 0.",
+      )
+      return
+    }
+
+    withActivity(promise) { activity ->
+      PlayGames
+        .getAchievementsClient(activity)
+        .increment(achievementId, stepCount)
+      promise.resolve(null)
+    }
+  }
+
+  override fun showAchievements(promise: Promise) {
+    withActivity(promise) { activity ->
+      UiThreadUtil.runOnUiThread {
+        PlayGames
+          .getAchievementsClient(activity)
+          .achievementsIntent
+          .addOnSuccessListener { intent: Intent ->
+            activity.startActivityForResult(intent, RC_ACHIEVEMENTS_UI)
+            promise.resolve(null)
+          }
+          .addOnFailureListener { error ->
+            rejectPromise(promise, "E_SHOW_ACHIEVEMENTS_FAILED", error)
+          }
+      }
+    }
+  }
+
   private fun resolveCurrentPlayer(activity: Activity, promise: Promise) {
     PlayGames
       .getPlayersClient(activity)
@@ -119,5 +185,6 @@ class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
 
   companion object {
     const val NAME = "GooglePlayGames"
+    private const val RC_ACHIEVEMENTS_UI = 9003
   }
 }

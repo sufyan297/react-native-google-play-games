@@ -14,6 +14,9 @@ export interface Spec extends TurboModule {
   signIn(): Promise<GooglePlayGamesPlayer>;
   signOut(): Promise<void>;
   getPlayer(): Promise<GooglePlayGamesPlayer | null>;
+  unlockAchievement(achievementId: string): Promise<void>;
+  incrementAchievement(achievementId: string, steps?: number): Promise<void>;
+  showAchievements(): Promise<void>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('GooglePlayGames');

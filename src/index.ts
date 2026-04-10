@@ -33,9 +33,30 @@ export async function getPlayer(): Promise<GooglePlayGamesPlayer | null> {
   return NativeGooglePlayGames.getPlayer();
 }
 
+export async function unlockAchievement(achievementId: string): Promise<void> {
+  ensureAndroid();
+  return NativeGooglePlayGames.unlockAchievement(achievementId);
+}
+
+export async function incrementAchievement(
+  achievementId: string,
+  steps = 1,
+): Promise<void> {
+  ensureAndroid();
+  return NativeGooglePlayGames.incrementAchievement(achievementId, steps);
+}
+
+export async function showAchievements(): Promise<void> {
+  ensureAndroid();
+  return NativeGooglePlayGames.showAchievements();
+}
+
 export default {
   isAuthenticated,
   signIn,
   signOut,
   getPlayer,
+  unlockAchievement,
+  incrementAchievement,
+  showAchievements,
 };
