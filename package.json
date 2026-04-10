@@ -6,7 +6,12 @@
     "react-native",
     "android",
     "google-play-games",
-    "turbo-module"
+    "turbo-module",
+    "achievements",
+    "leaderboards",
+    "multiplayer",
+    "cloud-saving",
+    "game-services"
   ],
   "license": "Apache-2.0",
   "main": "./src/index.ts",
@@ -22,6 +27,15 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
+  "author": "Mohammed Sufyan <sufyan297@gmail.com> (https://github.com/sufyan297)",
+    "bugs": {
+    "url": "https://github.com/sufyan297/react-native-google-play-games/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sufyan297/react-native-google-play-games.git"
+  },
+  "homepage": "https://github.com/sufyan297/react-native-google-play-games#readme",
   "peerDependencies": {
     "react": "*",
     "react-native": ">=0.80.0"
