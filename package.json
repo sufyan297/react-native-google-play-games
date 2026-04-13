@@ -1,9 +1,11 @@
 {
   "name": "react-native-google-play-games",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Android-only React Native TurboModule for Google Play Games Services.",
   "keywords": [
     "react-native",
+    "react-native-google-play-games",
+    "play-games-services",
     "android",
     "google-play-games",
     "turbo-module",

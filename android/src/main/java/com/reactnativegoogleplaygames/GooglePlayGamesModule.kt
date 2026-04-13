@@ -9,6 +9,8 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.module.annotations.ReactModule
 import com.google.android.gms.games.PlayGames
 import com.google.android.gms.games.Player
+import com.google.android.gms.games.leaderboard.LeaderboardScore
+import com.google.android.gms.games.leaderboard.LeaderboardVariant
 
 @ReactModule(name = GooglePlayGamesModule.NAME)
 class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
@@ -145,8 +147,108 @@ class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
           }
           .addOnFailureListener { error ->
             rejectPromise(promise, "E_SHOW_ACHIEVEMENTS_FAILED", error)
+        }
+      }
+    }
+  }
+
+  override fun submitScore(leaderboardId: String, score: Double, promise: Promise) {
+    if (leaderboardId.isBlank()) {
+      promise.reject(
+        "E_INVALID_LEADERBOARD_ID",
+        "leaderboardId must be a non-empty string.",
+      )
+      return
+    }
+
+    if (!score.isFinite() || score % 1.0 != 0.0) {
+      promise.reject(
+        "E_INVALID_LEADERBOARD_SCORE",
+        "score must be a finite whole number.",
+      )
+      return
+    }
+
+    withActivity(promise) { activity ->
+      PlayGames
+        .getLeaderboardsClient(activity)
+        .submitScore(leaderboardId, score.toLong())
+
+      promise.resolve(null)
+    }
+  }
+
+  override fun showLeaderboard(leaderboardId: String, promise: Promise) {
+    if (leaderboardId.isBlank()) {
+      promise.reject(
+        "E_INVALID_LEADERBOARD_ID",
+        "leaderboardId must be a non-empty string.",
+      )
+      return
+    }
+
+    withActivity(promise) { activity ->
+      UiThreadUtil.runOnUiThread {
+        PlayGames
+          .getLeaderboardsClient(activity)
+          .getLeaderboardIntent(leaderboardId)
+          .addOnSuccessListener { intent: Intent ->
+            activity.startActivityForResult(intent, RC_LEADERBOARD_UI)
+            promise.resolve(null)
+          }
+          .addOnFailureListener { error ->
+            rejectPromise(promise, "E_SHOW_LEADERBOARD_FAILED", error)
+        }
+      }
+    }
+  }
+
+  override fun showAllLeaderboards(promise: Promise) {
+    withActivity(promise) { activity ->
+      UiThreadUtil.runOnUiThread {
+        PlayGames
+          .getLeaderboardsClient(activity)
+          .allLeaderboardsIntent
+          .addOnSuccessListener { intent: Intent ->
+            activity.startActivityForResult(intent, RC_ALL_LEADERBOARDS_UI)
+            promise.resolve(null)
+          }
+          .addOnFailureListener { error ->
+            rejectPromise(promise, "E_SHOW_ALL_LEADERBOARDS_FAILED", error)
           }
       }
+    }
+  }
+
+  override fun loadCurrentPlayerScore(leaderboardId: String, promise: Promise) {
+    if (leaderboardId.isBlank()) {
+      promise.reject(
+        "E_INVALID_LEADERBOARD_ID",
+        "leaderboardId must be a non-empty string.",
+      )
+      return
+    }
+
+    withActivity(promise) { activity ->
+      PlayGames
+        .getLeaderboardsClient(activity)
+        .loadCurrentPlayerLeaderboardScore(
+          leaderboardId,
+          LeaderboardVariant.TIME_SPAN_ALL_TIME,
+          LeaderboardVariant.COLLECTION_PUBLIC,
+        )
+        .addOnSuccessListener { annotatedData ->
+          val score = annotatedData.get()
+          if (score == null) {
+            promise.resolve(null)
+            return@addOnSuccessListener
+          }
+
+          promise.resolve(leaderboardScoreToWritableMap(leaderboardId, score))
+        }
+        .addOnFailureListener { error ->
+          rejectPromise(promise, "E_LOAD_CURRENT_PLAYER_SCORE_FAILED", error)
+        }
     }
   }
 
@@ -184,6 +286,15 @@ class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
       putString("hiResImageUrl", player.hiResImageUri?.toString())
     }
 
+  private fun leaderboardScoreToWritableMap(leaderboardId: String, score: LeaderboardScore) =
+    Arguments.createMap().apply {
+      putString("leaderboardId", leaderboardId)
+      putDouble("rawScore", score.rawScore.toDouble())
+      putString("formattedScore", score.displayScore)
+      putString("rank", score.displayRank)
+      putString("tag", score.scoreTag)
+    }
+
   private fun rejectPromise(promise: Promise, code: String, error: Exception) {
     promise.reject(code, error.message, error)
   }
@@ -191,5 +302,7 @@ class GooglePlayGamesModule(reactContext: ReactApplicationContext) :
   companion object {
     const val NAME = "GooglePlayGames"
     private const val RC_ACHIEVEMENTS_UI = 9003
+    private const val RC_LEADERBOARD_UI = 9004
+    private const val RC_ALL_LEADERBOARDS_UI = 9005
   }
 }

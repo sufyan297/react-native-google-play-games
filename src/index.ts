@@ -1,7 +1,10 @@
 import {Platform} from 'react-native';
 
 import NativeGooglePlayGames from './NativeGooglePlayGames';
-import type {GooglePlayGamesPlayer} from './NativeGooglePlayGames';
+import type {
+  GooglePlayGamesLeaderboardScore,
+  GooglePlayGamesPlayer,
+} from './NativeGooglePlayGames';
 
 function ensureAndroid(): void {
   if (Platform.OS !== 'android') {
@@ -11,7 +14,7 @@ function ensureAndroid(): void {
   }
 }
 
-export type {GooglePlayGamesPlayer};
+export type {GooglePlayGamesLeaderboardScore, GooglePlayGamesPlayer};
 
 export async function isAuthenticated(): Promise<boolean> {
   ensureAndroid();
@@ -51,6 +54,31 @@ export async function showAchievements(): Promise<void> {
   return NativeGooglePlayGames.showAchievements();
 }
 
+export async function submitScore(
+  leaderboardId: string,
+  score: number,
+): Promise<void> {
+  ensureAndroid();
+  return NativeGooglePlayGames.submitScore(leaderboardId, score);
+}
+
+export async function showLeaderboard(leaderboardId: string): Promise<void> {
+  ensureAndroid();
+  return NativeGooglePlayGames.showLeaderboard(leaderboardId);
+}
+
+export async function showAllLeaderboards(): Promise<void> {
+  ensureAndroid();
+  return NativeGooglePlayGames.showAllLeaderboards();
+}
+
+export async function loadCurrentPlayerScore(
+  leaderboardId: string,
+): Promise<GooglePlayGamesLeaderboardScore | null> {
+  ensureAndroid();
+  return NativeGooglePlayGames.loadCurrentPlayerScore(leaderboardId);
+}
+
 export default {
   isAuthenticated,
   signIn,
@@ -59,4 +87,8 @@ export default {
   unlockAchievement,
   incrementAchievement,
   showAchievements,
+  submitScore,
+  showLeaderboard,
+  showAllLeaderboards,
+  loadCurrentPlayerScore,
 };

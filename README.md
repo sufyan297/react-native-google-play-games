@@ -2,9 +2,9 @@
 
 Android-only React Native TurboModule for Google Play Games Services.
 
-This package focuses on Google Play Games single sign-on and achievements for React Native `0.80+` with the New Architecture only.
+This package focuses on Google Play Games single sign-on, achievements, and leaderboards for React Native `0.80+` with the New Architecture only.
 
-## Included in v0.2.0
+## Included in v0.4.0
 
 - `isAuthenticated()`
 - `signIn()`
@@ -13,6 +13,10 @@ This package focuses on Google Play Games single sign-on and achievements for Re
 - `unlockAchievement()`
 - `incrementAchievement()`
 - `showAchievements()`
+- `submitScore()`
+- `showLeaderboard()`
+- `showAllLeaderboards()`
+- `loadCurrentPlayerScore()`
 
 Note: Google Play Games Services v2 on Android no longer exposes a native sign-out API. In this library, `signOut()` is kept in the JS surface for API stability, but currently rejects with `E_SIGN_OUT_UNSUPPORTED`.
 
@@ -27,6 +31,14 @@ export type GooglePlayGamesPlayer = {
   hiResImageUrl: string | null;
 };
 
+export type GooglePlayGamesLeaderboardScore = {
+  leaderboardId: string;
+  rawScore: number;
+  formattedScore: string;
+  rank: string | null;
+  tag: string | null;
+};
+
 isAuthenticated(): Promise<boolean>;
 signIn(): Promise<GooglePlayGamesPlayer>;
 signOut(): Promise<void>;
@@ -34,6 +46,12 @@ getPlayer(): Promise<GooglePlayGamesPlayer | null>;
 unlockAchievement(achievementId: string): Promise<void>;
 incrementAchievement(achievementId: string, steps?: number): Promise<void>;
 showAchievements(): Promise<void>;
+submitScore(leaderboardId: string, score: number): Promise<void>;
+showLeaderboard(leaderboardId: string): Promise<void>;
+showAllLeaderboards(): Promise<void>;
+loadCurrentPlayerScore(
+  leaderboardId: string,
+): Promise<GooglePlayGamesLeaderboardScore | null>;
 ```
 
 ## Installation
@@ -150,6 +168,37 @@ export async function openAchievementsScreen() {
 - Use the Play Games achievement IDs from your Console configuration.
 - `incrementAchievement()` should only be used with incremental achievements.
 - `showAchievements()` opens the native Google Play Games achievements UI.
+
+## Leaderboards usage
+
+```ts
+import GooglePlayGames from 'react-native-google-play-games';
+
+export async function submitBestScore(score: number) {
+  await GooglePlayGames.submitScore('CgkIxxxxxxxxEAIQAw', score);
+}
+
+export async function openLeaderboard() {
+  await GooglePlayGames.showLeaderboard('CgkIxxxxxxxxEAIQAw');
+}
+
+export async function openAllLeaderboards() {
+  await GooglePlayGames.showAllLeaderboards();
+}
+
+export async function getCurrentScore() {
+  return GooglePlayGames.loadCurrentPlayerScore('CgkIxxxxxxxxEAIQAw');
+}
+```
+
+## Leaderboards setup requirements
+
+- Define your leaderboards in Google Play Console before calling these APIs.
+- Use the Play Games leaderboard IDs from your Console configuration.
+- `submitScore()` expects a whole-number raw score value.
+- `showLeaderboard()` opens the native Google Play Games leaderboard UI for the provided leaderboard.
+- `showAllLeaderboards()` opens the native list of all Play Games leaderboards for your game.
+- `loadCurrentPlayerScore()` returns the signed-in player's public all-time score for that leaderboard, or `null` if no score exists yet.
 
 ## Example: `PlayGamesContext.tsx`
 

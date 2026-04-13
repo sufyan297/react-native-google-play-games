@@ -9,6 +9,14 @@ export type GooglePlayGamesPlayer = Readonly<{
   hiResImageUrl: string | null;
 }>;
 
+export type GooglePlayGamesLeaderboardScore = Readonly<{
+  leaderboardId: string;
+  rawScore: number;
+  formattedScore: string;
+  rank: string | null;
+  tag: string | null;
+}>;
+
 export interface Spec extends TurboModule {
   isAuthenticated(): Promise<boolean>;
   signIn(): Promise<GooglePlayGamesPlayer>;
@@ -17,6 +25,12 @@ export interface Spec extends TurboModule {
   unlockAchievement(achievementId: string): Promise<void>;
   incrementAchievement(achievementId: string, steps?: number): Promise<void>;
   showAchievements(): Promise<void>;
+  submitScore(leaderboardId: string, score: number): Promise<void>;
+  showLeaderboard(leaderboardId: string): Promise<void>;
+  showAllLeaderboards(): Promise<void>;
+  loadCurrentPlayerScore(
+    leaderboardId: string,
+  ): Promise<GooglePlayGamesLeaderboardScore | null>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('GooglePlayGames');
