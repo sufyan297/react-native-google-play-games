@@ -1,10 +1,12 @@
+![react-native-google-play-games banner](assets/react-native-google-play-games-banner.png)
+
 # react-native-google-play-games
 
 Android-only React Native TurboModule for Google Play Games Services.
 
 This package focuses on Google Play Games single sign-on, achievements, and leaderboards for React Native `0.80+` with the New Architecture only.
 
-## Included in v0.4.0
+## Included in v0.3.0
 
 - `isAuthenticated()`
 - `signIn()`
